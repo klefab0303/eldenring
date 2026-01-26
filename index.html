@@ -11,24 +11,31 @@
     margin-bottom: 50px;
   }
 
-  /* Container für mehrere Tabellen nebeneinander */
+  /* Container für mehrere Tabellen nebeneinander
+     -> Grid mit auto-fit/minmax sorgt dafür, dass bei breiterem Bildschirm
+        mehrere Tabellen (2–3+) nebeneinander angezeigt werden können */
   .region-tables {
-    display: flex;
-    flex-wrap: wrap; /* Tabellen umbrechen bei kleinen Bildschirmen */
-    gap: 20px;       /* Abstand zwischen Tabellen */
+    display: grid;
+    gap: 20px; /* Abstand zwischen Tabellen */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    align-items: start; /* Tabellen oben ausrichten */
   }
 
   .boss-table {
-    flex: 1 1 300px; /* min-width: 300px, flexibler Rest */
     border-collapse: collapse;
-    width: auto;     /* Flex bestimmt die Breite */
+    width: 100%;      /* Nimmt die volle Breite der Grid-Zelle ein */
+    min-width: 0;     /* Wichtig, damit Grid-Zellen schrumpfen können */
     margin-bottom: 20px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    overflow: hidden;
   }
 
   .boss-table th, .boss-table td {
     border: 1px solid #ccc;
     padding: 8px;
     text-align: left;
+    word-break: break-word;
   }
 
   .boss-table th {
@@ -40,6 +47,21 @@
     width: 100%;
     margin-bottom: 20px;
     font-size: 16px;
+  }
+
+  /* Optional: Feintuning für sehr breite Bildschirme */
+  @media (min-width: 1200px) {
+    .region-tables {
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+  }
+
+  /* Optional: engeres Layout auf sehr kleinen Bildschirmen */
+  @media (max-width: 420px) {
+    .boss-table th, .boss-table td {
+      padding: 6px;
+      font-size: 14px;
+    }
   }
 </style>
 

@@ -4,14 +4,45 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Elden Ring Boss-Checkliste</title>
-  <style>
-    body { font-family: sans-serif; padding: 20px; background: #f8f8f8; }
-    .boss-table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
-    .boss-table th, .boss-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    .boss-table th { background: #eee; }
-    .region { margin-bottom: 50px; }
-    #search { padding: 8px; width: 100%; margin-bottom: 20px; font-size: 16px; }
-  </style>
+<style>
+  body { font-family: sans-serif; padding: 20px; background: #f8f8f8; }
+
+  .region {
+    margin-bottom: 50px;
+  }
+
+  /* Container für mehrere Tabellen nebeneinander */
+  .region-tables {
+    display: flex;
+    flex-wrap: wrap; /* Tabellen umbrechen bei kleinen Bildschirmen */
+    gap: 20px;       /* Abstand zwischen Tabellen */
+  }
+
+  .boss-table {
+    flex: 1 1 300px; /* min-width: 300px, flexibler Rest */
+    border-collapse: collapse;
+    width: auto;     /* Flex bestimmt die Breite */
+    margin-bottom: 20px;
+  }
+
+  .boss-table th, .boss-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+  }
+
+  .boss-table th {
+    background: #eee;
+  }
+
+  #search {
+    padding: 8px;
+    width: 100%;
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+</style>
+
 </head>
 <body>
 
@@ -21,6 +52,7 @@
 
     <section class="region">
       <h2>Limgrave</h2>
+        <div class="region-tables">
       <table class="boss-table">
         <thead>
           <tr>
@@ -54,9 +86,11 @@
           <tr><td><input type="checkbox"></td><td>Verpflanzter Spross</td><td>Limgrave</td></tr>
         </tbody>
       </table>
+        </div>
     </section>
     <section class="region">
       <h2>Halbinsel der Tränen</h2>
+        <div class="region-tables">
       <table class="boss-table">
         <thead>
           <tr>
@@ -78,9 +112,11 @@
           <tr><td><input type="checkbox"></td><td>Uralter Held von Zamor</td><td>Halbinsel der Tränen</td></tr>
         </tbody>
       </table>
+        </div>
     </section>
     <section class="region">
       <h2>Liurnia, dem Seenland</h2>
+        <div class="region-tables">
       <table class="boss-table">
         <thead>
           <tr>
@@ -120,9 +156,11 @@
           <tr><td><input type="checkbox"></td><td>Rennala, Königin des Vollmonds</td><td>Liurnia, dem Seenland</td></tr>
         </tbody>
       </table>
+        </div>
     </section>
     <section class="region">
       <h2>Siofra</h2>
+        <div class="region-tables">
       <table class="boss-table">
         <thead>
           <tr>
@@ -140,9 +178,11 @@
           <tr><td><input type="checkbox"></td><td>Mohg, Herr des Blutes</td><td>Siofra</td></tr>
         </tbody>
       </table>
+        </div>
     </section>
     <section class="region">
       <h2>Caelid</h2>
+        <div class="region-tables">
       <table class="boss-table">
         <thead>
           <tr>
@@ -180,9 +220,11 @@
           <tr><td><input type="checkbox"></td><td>Verehrer der Schwarzen Klinge</td><td>Caelid</td></tr>
         </tbody>
       </table>
+        </div>
     </section>
     <section class="region">
       <h2>Altus Plateau</h2>
+        <div class="region-tables">
       <table class="boss-table">
         <thead>
           <tr>
@@ -220,9 +262,11 @@
           <tr><td><input type="checkbox"></td><td>Drachenbaumwächter</td><td>Altus Plateau</td></tr>
         </tbody>
       </table>
+        </div>
     </section>
     <section class="region">
       <h2>Untergrund von Ainsel & Tiefen von Tiefwurz</h2>
+        <div class="region-tables">
       <table class="boss-table">
         <thead>
           <tr>
@@ -241,9 +285,11 @@
           <tr><td><input type="checkbox"></td><td>Lichdrache Fortissax</td><td>Untergrund von Ainsel & Tiefen von Tiefwurz</td></tr>
         </tbody>
       </table>
+        </div>
     </section>
     <section class="region">
       <h2>Gelmir</h2>
+        <div class="region-tables">
       <table class="boss-table">
         <thead>
           <tr>
@@ -268,9 +314,11 @@
           <tr><td><input type="checkbox"></td><td>Parfümeurin Tricia & Löwenartiges Scheusal</td><td>Gelmir</td></tr>
         </tbody>
       </table>
+        </div>
     </section>
     <section class="region">
       <h2>Leyndell</h2>
+        <div class="region-tables">
       <table class="boss-table">
         <thead>
           <tr>
@@ -287,9 +335,11 @@
           <tr><td><input type="checkbox"></td><td>Morgott, König des Mals</td><td>Leyndell</td></tr>
         </tbody>
       </table>
+        </div>
     </section>
     <section class="region">
       <h2>Berggipfel der Riesen</h2>
+        <div class="region-tables">
       <table class="boss-table">
         <thead>
           <tr>
@@ -313,9 +363,11 @@
           <tr><td><input type="checkbox"></td><td>Feuerriese</td><td>Berggipfel der Riesen</td></tr>
         </tbody>
       </table>
+        </div>
     </section>
     <section class="region">
       <h2>Geweihtes Schneefeld</h2>
+        <div class="region-tables">
       <table class="boss-table">
         <thead>
           <tr>
@@ -335,9 +387,11 @@
           <tr><td><input type="checkbox"></td><td>Todesritenvogel</td><td>Geweihtes Schneefeld</td></tr>
         </tbody>
       </table>
+        </div>
     </section>
     <section class="region">
       <h2>Zerfallenes Farum Azula, Miquellas Haligbaum & Leyndell, Aschene Hauptstadt</h2>
+        <div class="region-tables">
       <table class="boss-table">
         <thead>
           <tr>
@@ -358,9 +412,11 @@
           <tr><td><input type="checkbox"></td><td>Radagon von der Goldenen Ordnung & Eldenbestie</td><td>Leyndell, Aschene Hauptstadt</td></tr>
         </tbody>
       </table>
+        </div>
     </section>
     <section class="region">
   <h2>DLC Bosse – Hauptbosse</h2>
+        <div class="region-tables">
   <table class="boss-table">
     <thead>
       <tr>
@@ -383,10 +439,12 @@
       <tr><td><input type="checkbox"></td><td>Radahn, versprochener Gemahl</td><td>Enir-Ilim</td></tr>
     </tbody>
   </table>
+        </div>
 </section>
 
 <section class="region">
   <h2>DLC Bosse – Nebenbosse</h2>
+    <div class="region-tables">
   <table class="boss-table">
     <thead>
       <tr>
@@ -423,6 +481,7 @@
       <tr><td><input type="checkbox"></td><td>Baumwächter</td><td>Schaman-Dorf</td></tr>
     </tbody>
   </table>
+    </div>
 </section>
 
   
@@ -515,12 +574,21 @@ regions.forEach(region => {
 // Filter-Funktion
 document.getElementById('search').addEventListener('input', (e) => {
   const term = e.target.value.toLowerCase();
+
   document.querySelectorAll('.boss-table tbody tr').forEach(row => {
-    const boss = row.cells[1].textContent.toLowerCase();
-    const region = row.cells[2].textContent.toLowerCase();
+    const boss = row.cells[1] ? row.cells[1].textContent.toLowerCase() : '';
+    const region = row.cells[2] ? row.cells[2].textContent.toLowerCase() : '';
     row.style.display = (boss.includes(term) || region.includes(term)) ? '' : 'none';
   });
+
+  // Ganze Region ausblenden, wenn kein Boss sichtbar
+  document.querySelectorAll('.region').forEach(region => {
+    const anyVisible = Array.from(region.querySelectorAll('tbody tr'))
+      .some(row => row.style.display !== 'none');
+    region.style.display = anyVisible ? '' : 'none';
+  });
 });
+
 </script>
 
 </body>

@@ -5,15 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Elden Ring Boss-Checkliste</title>
   <style>
-    /* Optional: etwas CSS für Tabellen und Layout */
     body { font-family: sans-serif; padding: 20px; background: #f8f8f8; }
     .boss-table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
     .boss-table th, .boss-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
     .boss-table th { background: #eee; }
     .region { margin-bottom: 50px; }
+    #search { padding: 8px; width: 100%; margin-bottom: 20px; font-size: 16px; }
   </style>
 </head>
 <body>
+
+<h1>Elden Ring Boss-Checkliste</h1>
+
+<input type="text" id="search" placeholder="Nach Boss oder Region filtern...">
+
     <section class="region">
       <h2>Limgrave</h2>
       <table class="boss-table">
@@ -354,5 +359,104 @@
         </tbody>
       </table>
     </section>
-  </body>
+
+  
+
+<h2>Bosse erledigt</h2>
+<canvas id="bossChart" width="400" height="200"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+const ctx = document.getElementById('bossChart').getContext('2d');
+
+const bossChart = new Chart(ctx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Besiegt', 'Noch offen'],
+    datasets: [{
+      label: 'Boss-Status',
+      data: [0, 0],
+      backgroundColor: ['#4caf50', '#f44336'],
+    }]
+  },
+  options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+});
+
+// LocalStorage laden und Checkboxen setzen
+checkboxes.forEach((cb, i) => {
+  cb.checked = localStorage.getItem('boss-' + i) === 'true';
+  cb.addEventListener('change', () => {
+    localStorage.setItem('boss-' + i, cb.checked);
+    updateChart();
+  });
+});
+
+function updateChart() {
+  const done = Array.from(checkboxes).filter(cb => cb.checked).length;
+  const total = checkboxes.length;
+  bossChart.data.datasets[0].data = [done, total - done];
+  bossChart.update();
+}
+updateChart();
+// Region-Fortschritt erstellen
+const regions = document.querySelectorAll('.region');
+
+regions.forEach(region => {
+  const table = region.querySelector('tbody');
+  const rows = table.querySelectorAll('tr');
+
+  // Fortschrittsbalk hinzufügen
+  const progressContainer = document.createElement('div');
+  progressContainer.style.margin = '10px 0';
+  progressContainer.style.background = '#ddd';
+  progressContainer.style.borderRadius = '5px';
+  progressContainer.style.height = '20px';
+  progressContainer.style.position = 'relative';
+
+  const progressBar = document.createElement('div');
+  progressBar.style.height = '100%';
+  progressBar.style.width = '0%';
+  progressBar.style.background = '#4caf50';
+  progressBar.style.borderRadius = '5px';
+  progressBar.style.transition = 'width 0.3s';
+
+  progressContainer.appendChild(progressBar);
+  region.insertBefore(progressContainer, table);
+
+  // Funktion zum Aktualisieren
+  function updateRegionProgress() {
+    const total = rows.length;
+    const done = Array.from(rows).filter(r => r.querySelector('input[type="checkbox"]').checked).length;
+    const percent = Math.round((done / total) * 100);
+    progressBar.style.width = percent + '%';
+    progressBar.textContent = percent + '%';
+    progressBar.style.color = '#fff';
+    progressBar.style.textAlign = 'center';
+    progressBar.style.fontWeight = 'bold';
+    progressBar.style.lineHeight = '20px';
+  }
+
+  // Initiales Update
+  updateRegionProgress();
+
+  // Checkboxen in dieser Region überwachen
+  rows.forEach(row => {
+    const cb = row.querySelector('input[type="checkbox"]');
+    cb.addEventListener('change', updateRegionProgress);
+  });
+});
+
+// Filter-Funktion
+document.getElementById('search').addEventListener('input', (e) => {
+  const term = e.target.value.toLowerCase();
+  document.querySelectorAll('.boss-table tbody tr').forEach(row => {
+    const boss = row.cells[1].textContent.toLowerCase();
+    const region = row.cells[2].textContent.toLowerCase();
+    row.style.display = (boss.includes(term) || region.includes(term)) ? '' : 'none';
+  });
+});
+</script>
+
+</body>
 </html>

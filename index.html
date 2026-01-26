@@ -70,7 +70,7 @@
 
 <h1>Elden Ring Boss-Checkliste</h1>
 
-<input type="text" id="search" placeholder="Nach Boss oder Region filtern...">
+<input type="text" id="search" placeholder="Nach Boss oder Region filtern..." aria-label="Suche Boss oder Region">
 
     <section class="region">
       <h2>Limgrave</h2>
@@ -513,121 +513,160 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-const ctx = document.getElementById('bossChart').getContext('2d');
+document.addEventListener('DOMContentLoaded', () => {
+  // Initialisiere Checkbox-/Chart-Logik
+  const checkboxes = Array.from(document.querySelectorAll('input[type="checkbox"]'));
+  const ctx = document.getElementById('bossChart') && document.getElementById('bossChart').getContext ? document.getElementById('bossChart').getContext('2d') : null;
 
-const bossChart = new Chart(ctx, {
-  type: 'doughnut',
-  data: {
-    labels: ['Besiegt', 'Noch offen'],
-    datasets: [{
-      label: 'Boss-Status',
-      data: [0, 0],
-      backgroundColor: ['#4caf50', '#f44336'],
-    }]
-  },
-  options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
-});
+  const bossChart = ctx ? new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Besiegt', 'Noch offen'],
+      datasets: [{
+        label: 'Boss-Status',
+        data: [0, 0],
+        backgroundColor: ['#4caf50', '#f44336'],
+      }]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+  }) : null;
 
-// LocalStorage laden und Checkboxen setzen
-checkboxes.forEach((cb, i) => {
-  cb.checked = localStorage.getItem('boss-' + i) === 'true';
-  cb.addEventListener('change', () => {
-    localStorage.setItem('boss-' + i, cb.checked);
-    updateChart();
+  // LocalStorage laden und Checkboxen setzen
+  checkboxes.forEach((cb, i) => {
+    try {
+      cb.checked = localStorage.getItem('boss-' + i) === 'true';
+    } catch (e) {
+      // Falls localStorage nicht verfügbar ist (z.B. privater Modus), ignoriere
+      console.warn('localStorage nicht verfügbar:', e);
+      cb.checked = false;
+    }
+    cb.addEventListener('change', () => {
+      try {
+        localStorage.setItem('boss-' + i, cb.checked);
+      } catch (e) {
+        // ignore
+      }
+      updateChart();
+      // Trigger input event um Region-Fortschritt neu zu berechnen (falls gefiltert)
+      const ev = new Event('input', { bubbles: true });
+      const searchEl = document.getElementById('search');
+      if (searchEl) searchEl.dispatchEvent(ev);
+    });
   });
-});
 
-function updateChart() {
-  const done = Array.from(checkboxes).filter(cb => cb.checked).length;
-  const total = checkboxes.length;
-  bossChart.data.datasets[0].data = [done, total - done];
-  bossChart.update();
-}
-updateChart();
-// Region-Fortschritt erstellen
-const regions = document.querySelectorAll('.region');
+  function updateChart() {
+    if (!bossChart) return;
+    const done = checkboxes.filter(cb => cb.checked).length;
+    const total = checkboxes.length;
+    bossChart.data.datasets[0].data = [done, total - done];
+    bossChart.update();
+  }
+  updateChart();
 
-regions.forEach(region => {
-  const table = region.querySelector('tbody');
-  const rows = table.querySelectorAll('tr');
+  // Region-Fortschritt erstellen
+  const regions = Array.from(document.querySelectorAll('.region'));
 
-  // Fortschrittsbalk hinzufügen
-  const progressContainer = document.createElement('div');
-  progressContainer.style.margin = '10px 0';
-  progressContainer.style.background = '#ddd';
-  progressContainer.style.borderRadius = '5px';
-  progressContainer.style.height = '20px';
-  progressContainer.style.position = 'relative';
+  regions.forEach(region => {
+    const table = region.querySelector('tbody');
+    if (!table) return;
+    const rows = Array.from(table.querySelectorAll('tr'));
 
-  const progressBar = document.createElement('div');
-  progressBar.style.height = '100%';
-  progressBar.style.width = '0%';
-  progressBar.style.background = '#4caf50';
-  progressBar.style.borderRadius = '5px';
-  progressBar.style.transition = 'width 0.3s';
+    // Fortschrittsbalk hinzufügen
+    const progressContainer = document.createElement('div');
+    progressContainer.style.margin = '10px 0';
+    progressContainer.style.background = '#ddd';
+    progressContainer.style.borderRadius = '5px';
+    progressContainer.style.height = '20px';
+    progressContainer.style.position = 'relative';
 
-  progressContainer.appendChild(progressBar);
-  region.insertBefore(progressContainer, table);
+    const progressBar = document.createElement('div');
+    progressBar.style.height = '100%';
+    progressBar.style.width = '0%';
+    progressBar.style.background = '#4caf50';
+    progressBar.style.borderRadius = '5px';
+    progressBar.style.transition = 'width 0.3s';
 
-  // Funktion zum Aktualisieren
-  function updateRegionProgress() {
-    const total = rows.length;
-    const done = Array.from(rows).filter(r => r.querySelector('input[type="checkbox"]').checked).length;
-    const percent = Math.round((done / total) * 100);
-    progressBar.style.width = percent + '%';
-    progressBar.textContent = percent + '%';
-    progressBar.style.color = '#fff';
-    progressBar.style.textAlign = 'center';
-    progressBar.style.fontWeight = 'bold';
-    progressBar.style.lineHeight = '20px';
+    progressContainer.appendChild(progressBar);
+    region.insertBefore(progressContainer, table);
+
+    // Funktion zum Aktualisieren
+    function updateRegionProgress() {
+      const total = rows.length || 1;
+      const done = rows.filter(r => r.querySelector('input[type="checkbox"]') && r.querySelector('input[type="checkbox"]').checked).length;
+      const percent = Math.round((done / total) * 100);
+      progressBar.style.width = percent + '%';
+      progressBar.textContent = percent + '%';
+      progressBar.style.color = '#fff';
+      progressBar.style.textAlign = 'center';
+      progressBar.style.fontWeight = 'bold';
+      progressBar.style.lineHeight = '20px';
+    }
+
+    // Initiales Update
+    updateRegionProgress();
+
+    // Checkboxen in dieser Region überwachen
+    rows.forEach(row => {
+      const cb = row.querySelector('input[type="checkbox"]');
+      if (!cb) return;
+      cb.addEventListener('change', updateRegionProgress);
+    });
+  });
+
+  // Hilfsfunktion: Normalisieren (Kleinbuchstaben + entfernen diakritischer Zeichen)
+  function normalizeText(s) {
+    if (!s) return '';
+    try {
+      let t = String(s).trim().toLowerCase();
+      // ß zu ss umwandeln, damit Suche standardmäßig funktioniert
+      t = t.replace(/ß/g, 'ss');
+      // Unicode-Normalisierung falls verfügbar
+      if (String.prototype.normalize) {
+        t = t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      }
+      return t;
+    } catch (e) {
+      // Fallback
+      try { return String(s).trim().toLowerCase().replace(/ß/g, 'ss'); } catch (_) { return ''; }
+    }
   }
 
-  // Initiales Update
-  updateRegionProgress();
+  // Verbesserte Filter-Funktion (prüft Boss, Region-Spalte und Regions-Überschrift)
+  const searchEl = document.getElementById('search');
+  if (searchEl) {
+    searchEl.addEventListener('input', (e) => {
+      try {
+        const term = normalizeText(e.target.value);
 
-  // Checkboxen in dieser Region überwachen
-  rows.forEach(row => {
-    const cb = row.querySelector('input[type="checkbox"]');
-    cb.addEventListener('change', updateRegionProgress);
-  });
-});
+        document.querySelectorAll('.region').forEach(region => {
+          let anyVisible = false;
+          const regionHeadingEl = region.querySelector('h2');
+          const regionHeading = normalizeText(regionHeadingEl ? regionHeadingEl.textContent : '');
 
-// Hilfsfunktion: Normalisieren (Kleinbuchstaben + entfernen diakritischer Zeichen)
-function normalizeText(s) {
-  if (!s) return '';
-  try {
-    return s.toString().trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  } catch (e) {
-    // Falls normalize nicht unterstützt wird, fallback
-    return s.toString().trim().toLowerCase();
-  }
-}
+          const rows = region.querySelectorAll('tbody tr');
+          rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            const boss = normalizeText(cells[1] ? cells[1].textContent : '');
+            const regionName = normalizeText(cells[2] ? cells[2].textContent : '');
 
-// Verbesserte Filter-Funktion (prüft Boss, Region-Spalte und Regions-Überschrift)
-document.getElementById('search').addEventListener('input', (e) => {
-  const term = normalizeText(e.target.value);
+            const matches = term === '' ||
+                            (boss && boss.includes(term)) ||
+                            (regionName && regionName.includes(term)) ||
+                            (regionHeading && regionHeading.includes(term));
 
-  document.querySelectorAll('.region').forEach(region => {
-    let anyVisible = false;
-    const regionHeadingEl = region.querySelector('h2');
-    const regionHeading = normalizeText(regionHeadingEl ? regionHeadingEl.textContent : '');
+            row.style.display = matches ? '' : 'none';
+            if (matches) anyVisible = true;
+          });
 
-    region.querySelectorAll('tbody tr').forEach(row => {
-      const cells = row.querySelectorAll('td');
-      const boss = normalizeText(cells[1] ? cells[1].textContent : '');
-      const regionName = normalizeText(cells[2] ? cells[2].textContent : '');
-
-      if (term === '' || boss.indexOf(term) !== -1 || regionName.indexOf(term) !== -1 || regionHeading.indexOf(term) !== -1) {
-        row.style.display = '';
-        anyVisible = true;
-      } else {
-        row.style.display = 'none';
+          region.style.display = anyVisible ? '' : 'none';
+        });
+      } catch (err) {
+        console.error('Fehler bei der Suche:', err);
       }
     });
-
-    region.style.display = anyVisible ? '' : 'none';
-  });
+  } else {
+    console.warn('Such-Eingabefeld (#search) nicht gefunden.');
+  }
 });
 </script>
 

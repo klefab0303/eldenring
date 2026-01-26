@@ -575,19 +575,24 @@ regions.forEach(region => {
 document.getElementById('search').addEventListener('input', (e) => {
   const term = e.target.value.toLowerCase();
 
-  document.querySelectorAll('.boss-table tbody tr').forEach(row => {
-    const boss = row.cells[1] ? row.cells[1].textContent.toLowerCase() : '';
-    const region = row.cells[2] ? row.cells[2].textContent.toLowerCase() : '';
-    row.style.display = (boss.includes(term) || region.includes(term)) ? '' : 'none';
-  });
-
-  // Ganze Region ausblenden, wenn kein Boss sichtbar
   document.querySelectorAll('.region').forEach(region => {
-    const anyVisible = Array.from(region.querySelectorAll('tbody tr'))
-      .some(row => row.style.display !== 'none');
+    let anyVisible = false;
+
+    region.querySelectorAll('tbody tr').forEach(row => {
+      const boss = row.cells[1]?.textContent.toLowerCase() || '';
+      const regionName = row.cells[2]?.textContent.toLowerCase() || '';
+      if (boss.includes(term) || regionName.includes(term)) {
+        row.style.display = '';
+        anyVisible = true;
+      } else {
+        row.style.display = 'none';
+      }
+    });
+
     region.style.display = anyVisible ? '' : 'none';
   });
 });
+
 
 </script>
 

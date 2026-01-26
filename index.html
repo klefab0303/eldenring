@@ -571,17 +571,32 @@ regions.forEach(region => {
   });
 });
 
-// Filter-Funktion
+// Hilfsfunktion: Normalisieren (Kleinbuchstaben + entfernen diakritischer Zeichen)
+function normalizeText(s) {
+  if (!s) return '';
+  try {
+    return s.toString().trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  } catch (e) {
+    // Falls normalize nicht unterstützt wird, fallback
+    return s.toString().trim().toLowerCase();
+  }
+}
+
+// Verbesserte Filter-Funktion (prüft Boss, Region-Spalte und Regions-Überschrift)
 document.getElementById('search').addEventListener('input', (e) => {
-  const term = e.target.value.toLowerCase();
+  const term = normalizeText(e.target.value);
 
   document.querySelectorAll('.region').forEach(region => {
     let anyVisible = false;
+    const regionHeadingEl = region.querySelector('h2');
+    const regionHeading = normalizeText(regionHeadingEl ? regionHeadingEl.textContent : '');
 
     region.querySelectorAll('tbody tr').forEach(row => {
-      const boss = row.cells[1]?.textContent.toLowerCase() || '';
-      const regionName = row.cells[2]?.textContent.toLowerCase() || '';
-      if (boss.includes(term) || regionName.includes(term)) {
+      const cells = row.querySelectorAll('td');
+      const boss = normalizeText(cells[1] ? cells[1].textContent : '');
+      const regionName = normalizeText(cells[2] ? cells[2].textContent : '');
+
+      if (term === '' || boss.indexOf(term) !== -1 || regionName.indexOf(term) !== -1 || regionHeading.indexOf(term) !== -1) {
         row.style.display = '';
         anyVisible = true;
       } else {
@@ -592,8 +607,6 @@ document.getElementById('search').addEventListener('input', (e) => {
     region.style.display = anyVisible ? '' : 'none';
   });
 });
-
-
 </script>
 
 </body>

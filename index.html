@@ -7,6 +7,30 @@
 <style>
   body { font-family: sans-serif; padding: 20px; background: #f8f8f8; }
 
+  .accordion {
+  background-color: #eee;
+  color: #333;
+  cursor: pointer;
+  padding: 12px 18px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  transition: background-color 0.3s;
+}
+
+.accordion:hover {
+  background-color: #ddd;
+}
+
+.panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+
   .region {
     margin-bottom: 50px;
   }
@@ -73,8 +97,8 @@
 <input type="text" id="search" placeholder="Nach Boss oder Region filtern..." aria-label="Suche Boss oder Region">
 
     <section class="region">
-      <h2>Limgrave</h2>
-        <div class="region-tables">
+      <button class="accordion">Limgrave</button>
+        <div class="panel">
       <table class="boss-table">
   <thead>
     <tr>
@@ -291,8 +315,8 @@
         </div>
     </section>
     <section class="region">
-      <h2>Halbinsel der Tränen</h2>
-        <div class="region-tables">
+      <button class="accordion">Halbinsel der Tränen</button>
+        <div class="panel">
   <table class="boss-table">
   <thead>
     <tr>
@@ -401,8 +425,8 @@
         </div>
     </section>
     <section class="region">
-      <h2>Liurnia, dem Seenland</h2>
-        <div class="region-tables">
+      <button class="accordion">Liurnia, dem Seenland</button>
+        <div class="panel">
 <table class="boss-table">
   <thead>
     <tr>
@@ -449,8 +473,8 @@
         </div>
     </section>
     <section class="region">
-      <h2>Siofra</h2>
-        <div class="region-tables">
+      <button class="accordion">Siofra</button>
+        <div class="panel">
 <table class="boss-table">
   <thead>
     <tr>
@@ -523,8 +547,8 @@
         </div>
     </section>
     <section class="region">
-      <h2>Caelid</h2>
-        <div class="region-tables">
+      <button class="accordion">Caelid</button>
+        <div class="panel">
 <table class="boss-table">
   <thead>
     <tr>
@@ -569,8 +593,8 @@
         </div>
     </section>
     <section class="region">
-      <h2>Altus Plateau</h2>
-        <div class="region-tables">
+      <button class="accordion">Altus Plateau</button>
+        <div class="panel">
   <table class="boss-table">
   <thead>
     <tr>
@@ -615,8 +639,8 @@
         </div>
     </section>
     <section class="region">
-      <h2>Untergrund von Ainsel & Tiefen von Tiefwurz</h2>
-        <div class="region-tables">
+      <button class="accordion">Untergrund von Ainsel & Tiefen von Tiefwurz</button>
+        <div class="panel">
 <table class="boss-table">
   <thead>
     <tr>
@@ -698,8 +722,8 @@
         </div>
     </section>
     <section class="region">
-      <h2>Gelmir</h2>
-        <div class="region-tables">
+      <button class="accordion">Gelmir</button>
+        <div class="panel">
       <table class="boss-table">
   <thead>
     <tr>
@@ -835,8 +859,8 @@
         </div>
     </section>
     <section class="region">
-      <h2>Leyndell</h2>
-        <div class="region-tables">
+      <button class="accordion">Leyndell</button>
+        <div class="panel">
 <table class="boss-table">
   <thead>
     <tr>
@@ -900,8 +924,8 @@
         </div>
     </section>
     <section class="region">
-      <h2>Berggipfel der Riesen</h2>
-        <div class="region-tables">
+      <button class="accordion">Berggipfel der Riesen</button>
+        <div class="panel">
   <table class="boss-table">
   <thead>
     <tr>
@@ -1028,8 +1052,8 @@
         </div>
     </section>
     <section class="region">
-      <h2>Geweihtes Schneefeld</h2>
-        <div class="region-tables">
+      <button class="accordion">Geweihtes Schneefeld</button>
+        <div class="panel">
   <table class="boss-table">
   <thead>
     <tr>
@@ -1120,8 +1144,8 @@
         </div>
     </section>
     <section class="region">
-      <h2>Zerfallenes Farum Azula, Miquellas Haligbaum & Leyndell, Aschene Hauptstadt</h2>
-        <div class="region-tables">
+      <button class="accordion">Zerfallenes Farum Azula, Miquellas Haligbaum & Leyndell, Aschene Hauptstadt</button>
+        <div class="panel">
    <table class="boss-table">
   <thead>
     <tr>
@@ -1221,8 +1245,8 @@
         </div>
     </section>
     <section class="region">
-  <h2>DLC Bosse – Hauptbosse</h2>
-        <div class="region-tables">
+  <button class="accordion">DLC Bosse – Hauptbosse</button>
+        <div class="panel">
   <table class="boss-table">
     <thead>
       <tr>
@@ -1249,8 +1273,8 @@
 </section>
 
 <section class="region">
-  <h2>DLC Bosse – Nebenbosse</h2>
-    <div class="region-tables">
+  <button class="accordion">DLC Bosse – Nebenbosse</button>
+    <div class="panel">
   <table class="boss-table">
     <thead>
       <tr>
@@ -1292,167 +1316,73 @@
 
   
 
-<h2>Bosse erledigt</h2>
+<button class="accordion">Bosse erledigt</button>
 <canvas id="bossChart" width="400" height="200"></canvas>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialisiere Checkbox-/Chart-Logik
-  const checkboxes = Array.from(document.querySelectorAll('input[type="checkbox"]'));
-  const ctx = document.getElementById('bossChart') && document.getElementById('bossChart').getContext ? document.getElementById('bossChart').getContext('2d') : null;
+  // --- Accordion-Funktion ---
+  const accordions = document.querySelectorAll('.accordion');
+  accordions.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('active');
+      const panel = btn.nextElementSibling;
+      if (panel.style.maxHeight) {
+        panel.style.maxHeight = null;
+      } else {
+        panel.style.maxHeight = panel.scrollHeight + "px";
+      }
+    });
+  });
 
-  const bossChart = ctx ? new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Besiegt', 'Noch offen'],
-      datasets: [{
-        label: 'Boss-Status',
-        data: [0, 0],
-        backgroundColor: ['#4caf50', '#f44336'],
-      }]
-    },
-    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
-  }) : null;
+  // --- Suchfunktion ---
+  const searchInput = document.getElementById('search');
+  searchInput.addEventListener('input', () => {
+    const query = searchInput.value.toLowerCase();
+    const regions = document.querySelectorAll('.region');
 
-  // LocalStorage laden und Checkboxen setzen
-  checkboxes.forEach((cb, i) => {
-    try {
-      cb.checked = localStorage.getItem('boss-' + i) === 'true';
-    } catch (e) {
-      // Falls localStorage nicht verfügbar ist (z.B. privater Modus), ignoriere
-      console.warn('localStorage nicht verfügbar:', e);
-      cb.checked = false;
-    }
+    regions.forEach(region => {
+      const regionName = region.querySelector('.accordion').textContent.toLowerCase();
+      const table = region.querySelector('table');
+      const rows = table.querySelectorAll('tbody tr');
+
+      let anyVisible = false;
+
+      rows.forEach(row => {
+        const rowText = row.textContent.toLowerCase();
+        if (rowText.includes(query) || regionName.includes(query)) {
+          row.style.display = '';
+          anyVisible = true;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      // Region nur anzeigen, wenn mindestens eine Zeile sichtbar ist
+      region.style.display = anyVisible ? '' : 'none';
+    });
+  });
+
+  // --- Fortschrittsanzeige ---
+  const totalBosses = document.querySelectorAll('.boss-table tbody tr').length;
+  const progress = document.createElement('div');
+  progress.id = 'progress';
+  progress.style.margin = '15px 0';
+  progress.style.fontWeight = 'bold';
+  progress.textContent = `Boss-Fortschritt: 0 / ${totalBosses}`;
+  document.body.insertBefore(progress, document.getElementById('search').nextSibling);
+
+  const checkboxes = document.querySelectorAll('.boss-table tbody input[type="checkbox"]');
+  checkboxes.forEach(cb => {
     cb.addEventListener('change', () => {
-      try {
-        localStorage.setItem('boss-' + i, cb.checked);
-      } catch (e) {
-        // ignore
-      }
-      updateChart();
-      // Trigger input event um Region-Fortschritt neu zu berechnen (falls gefiltert)
-      const ev = new Event('input', { bubbles: true });
-      const searchEl = document.getElementById('search');
-      if (searchEl) searchEl.dispatchEvent(ev);
+      const checked = document.querySelectorAll('.boss-table tbody input[type="checkbox"]:checked').length;
+      progress.textContent = `Boss-Fortschritt: ${checked} / ${totalBosses}`;
     });
   });
-
-  function updateChart() {
-    if (!bossChart) return;
-    const done = checkboxes.filter(cb => cb.checked).length;
-    const total = checkboxes.length;
-    bossChart.data.datasets[0].data = [done, total - done];
-    bossChart.update();
-  }
-  updateChart();
-
-  // Region-Fortschritt erstellen
-  const regions = Array.from(document.querySelectorAll('.region'));
-
-  regions.forEach(region => {
-    const table = region.querySelector('tbody');
-    if (!table) return;
-    const rows = Array.from(table.querySelectorAll('tr'));
-
-    // Fortschrittsbalk hinzufügen
-    const progressContainer = document.createElement('div');
-    progressContainer.style.margin = '10px 0';
-    progressContainer.style.background = '#ddd';
-    progressContainer.style.borderRadius = '5px';
-    progressContainer.style.height = '20px';
-    progressContainer.style.position = 'relative';
-
-    const progressBar = document.createElement('div');
-    progressBar.style.height = '100%';
-    progressBar.style.width = '0%';
-    progressBar.style.background = '#4caf50';
-    progressBar.style.borderRadius = '5px';
-    progressBar.style.transition = 'width 0.3s';
-
-    progressContainer.appendChild(progressBar);
-    region.insertBefore(progressContainer, table);
-
-    // Funktion zum Aktualisieren
-    function updateRegionProgress() {
-      const total = rows.length || 1;
-      const done = rows.filter(r => r.querySelector('input[type="checkbox"]') && r.querySelector('input[type="checkbox"]').checked).length;
-      const percent = Math.round((done / total) * 100);
-      progressBar.style.width = percent + '%';
-      progressBar.textContent = percent + '%';
-      progressBar.style.color = '#fff';
-      progressBar.style.textAlign = 'center';
-      progressBar.style.fontWeight = 'bold';
-      progressBar.style.lineHeight = '20px';
-    }
-
-    // Initiales Update
-    updateRegionProgress();
-
-    // Checkboxen in dieser Region überwachen
-    rows.forEach(row => {
-      const cb = row.querySelector('input[type="checkbox"]');
-      if (!cb) return;
-      cb.addEventListener('change', updateRegionProgress);
-    });
-  });
-
-  // Hilfsfunktion: Normalisieren (Kleinbuchstaben + entfernen diakritischer Zeichen)
-  function normalizeText(s) {
-    if (!s) return '';
-    try {
-      let t = String(s).trim().toLowerCase();
-      // ß zu ss umwandeln, damit Suche standardmäßig funktioniert
-      t = t.replace(/ß/g, 'ss');
-      // Unicode-Normalisierung falls verfügbar
-      if (String.prototype.normalize) {
-        t = t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-      }
-      return t;
-    } catch (e) {
-      // Fallback
-      try { return String(s).trim().toLowerCase().replace(/ß/g, 'ss'); } catch (_) { return ''; }
-    }
-  }
-
-  // Verbesserte Filter-Funktion (prüft Boss, Region-Spalte und Regions-Überschrift)
-  const searchEl = document.getElementById('search');
-  if (searchEl) {
-    searchEl.addEventListener('input', (e) => {
-      try {
-        const term = normalizeText(e.target.value);
-
-        document.querySelectorAll('.region').forEach(region => {
-          let anyVisible = false;
-          const regionHeadingEl = region.querySelector('h2');
-          const regionHeading = normalizeText(regionHeadingEl ? regionHeadingEl.textContent : '');
-
-          const rows = region.querySelectorAll('tbody tr');
-          rows.forEach(row => {
-            const cells = row.querySelectorAll('td');
-            const boss = normalizeText(cells[1] ? cells[1].textContent : '');
-            const regionName = normalizeText(cells[2] ? cells[2].textContent : '');
-
-            const matches = term === '' ||
-                            (boss && boss.includes(term)) ||
-                            (regionName && regionName.includes(term)) ||
-                            (regionHeading && regionHeading.includes(term));
-
-            row.style.display = matches ? '' : 'none';
-            if (matches) anyVisible = true;
-          });
-
-          region.style.display = anyVisible ? '' : 'none';
-        });
-      } catch (err) {
-        console.error('Fehler bei der Suche:', err);
-      }
-    });
-  } else {
-    console.warn('Such-Eingabefeld (#search) nicht gefunden.');
-  }
 });
 </script>
+
 
 </body>
 </html>
